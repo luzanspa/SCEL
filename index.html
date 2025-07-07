@@ -1557,11 +1557,12 @@
         </div>
         
         <!-- Métricas Financeiras -->
-        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(${stats.financeiro.gastosMensal !== null ? '4' : '3'}, 1fr); gap: 15px; margin-bottom: 20px;">
+          ${stats.financeiro.gastosMensal !== null ? `
           <div class="metric-card dark-card" style="background: linear-gradient(135deg, #20b2aa 0%, #008b8b 100%); color: white; padding: 20px; border-radius: 15px; text-align: center;">
-            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">R$ ${stats.financeiro.receitaMensal.toFixed(2)}</div>
+            <div style="font-size: 1.8rem; font-weight: bold; margin-bottom: 5px;">R$ ${stats.financeiro.gastosMensal.toFixed(2)}</div>
             <div style="font-size: 0.8rem; opacity: 0.9; text-transform: uppercase;">GASTOS MENSAIS</div>
-          </div>
+          </div>` : ''}
           <div class="metric-card dark-card" style="background: linear-gradient(135deg, #dc143c 0%, #b22222 100%); color: white; padding: 20px; border-radius: 15px; text-align: center;">
             <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 5px;">R$ ${stats.financeiro.exameMaisCaro.valor.toFixed(2)}</div>
             <div style="font-size: 0.7rem; opacity: 0.9; text-transform: uppercase;">EXAME MAIS CARO</div>
@@ -1800,7 +1801,9 @@
     function calcularEstatisticas(mesFiltro = 'todos') {
       // Filtrar pacientes por mês se especificado
       let pacientesFiltrados = pacientes;
+      let mesEspecifico = false;
       if (mesFiltro !== 'todos') {
+        mesEspecifico = true;
         const [anoFiltro, mesFiltro2] = mesFiltro.split('-');
         pacientesFiltrados = pacientes.filter(p => {
           if (!p.dataCadastro) return false;
@@ -1835,7 +1838,7 @@
         cadastrosMensais: [],
         financeiro: {
           valorTotal: 0,
-          receitaMensal: 0,
+          gastosMensal: mesEspecifico ? 0 : null,
           valorMedioPaciente: 0,
           exameMaisCaro: { nome: '', valor: 0 },
           exameMaisBarato: { nome: '', valor: 999 },
@@ -1950,7 +1953,9 @@
       
       // Finalizar cálculos financeiros
       stats.financeiro.valorTotal = valorTotalGeral;
-      stats.financeiro.receitaMensal = valorMesAtual;
+      if (mesEspecifico) {
+        stats.financeiro.gastosMensal = valorTotalGeral;
+      }
       stats.financeiro.valorMedioPaciente = stats.total > 0 ? valorTotalGeral / stats.total : 0;
       stats.financeiro.exameMaisCaro = exameMaisCaro.valor > 0 ? exameMaisCaro : { nome: 'N/A', valor: 0 };
       stats.financeiro.exameMaisBarato = exameMaisBarato.valor < 999 ? exameMaisBarato : { nome: 'N/A', valor: 0 };
@@ -2157,11 +2162,12 @@
           </div>
           
           <!-- Métricas Financeiras -->
-          <div class="grid grid-4">
+          <div class="grid ${stats.financeiro.gastosMensal !== null ? 'grid-4' : 'grid-3'}">
+            ${stats.financeiro.gastosMensal !== null ? `
             <div class="card financial">
-              <div class="metric">R$ ${stats.financeiro.receitaMensal.toFixed(2)}</div>
+              <div class="metric">R$ ${stats.financeiro.gastosMensal.toFixed(2)}</div>
               <div class="label">Gastos Mensais</div>
-            </div>
+            </div>` : ''}
             <div class="card financial">
               <div class="metric">R$ ${stats.financeiro.valorMedioPaciente.toFixed(2)}</div>
               <div class="label">Média/Paciente</div>
