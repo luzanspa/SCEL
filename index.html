@@ -898,7 +898,7 @@
       // Coluna 1
       html += '<div class="coluna-exames">';
       coluna1.forEach(exame => {
-        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo) ? 'selecionado' : '';
+        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo || e.texto.includes(exame.codigo)) ? 'selecionado' : '';
         html += `
           <div class="exame-item ${selecionado}" onclick="toggleExameModal('${exame.codigo}', '${exame.nome}')">
             <span class="exame-codigo">${exame.codigo}</span>
@@ -911,7 +911,7 @@
       // Coluna 2
       html += '<div class="coluna-exames">';
       coluna2.forEach(exame => {
-        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo) ? 'selecionado' : '';
+        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo || e.texto.includes(exame.codigo)) ? 'selecionado' : '';
         html += `
           <div class="exame-item ${selecionado}" onclick="toggleExameModal('${exame.codigo}', '${exame.nome}')">
             <span class="exame-codigo">${exame.codigo}</span>
@@ -924,7 +924,7 @@
       // Coluna 3
       html += '<div class="coluna-exames">';
       coluna3.forEach(exame => {
-        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo) ? 'selecionado' : '';
+        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo || e.texto.includes(exame.codigo)) ? 'selecionado' : '';
         html += `
           <div class="exame-item ${selecionado}" onclick="toggleExameModal('${exame.codigo}', '${exame.nome}')">
             <span class="exame-codigo">${exame.codigo}</span>
@@ -937,7 +937,7 @@
       // Coluna 4
       html += '<div class="coluna-exames">';
       coluna4.forEach(exame => {
-        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo) ? 'selecionado' : '';
+        const selecionado = examesTemporarios.find(e => e.valor === exame.codigo || e.texto.includes(exame.codigo)) ? 'selecionado' : '';
         html += `
           <div class="exame-item ${selecionado}" onclick="toggleExameModal('${exame.codigo}', '${exame.nome}')">
             <span class="exame-codigo">${exame.codigo}</span>
@@ -994,13 +994,13 @@
       
       if (pacienteEditando) {
         // Modo edição
-        pacienteEditando.nome = document.getElementById('nome').value;
+        pacienteEditando.nome = document.getElementById('nome').value.toUpperCase();
         pacienteEditando.cpf = document.getElementById('cpf').value;
         pacienteEditando.dataNascimento = document.getElementById('dataNascimento').value;
         pacienteEditando.telefone = document.getElementById('telefone').value;
         pacienteEditando.genero = document.getElementById('genero').value === 'outro' ? document.getElementById('outroGenero').value : document.getElementById('genero').value;
         pacienteEditando.laboratorio = document.getElementById('laboratorio').value;
-        pacienteEditando.endereco = document.getElementById('endereco').value;
+        pacienteEditando.endereco = document.getElementById('endereco').value.toUpperCase();
         pacienteEditando.exames = [...examesSelecionados];
         
         localStorage.setItem('pacientes', JSON.stringify(pacientes));
@@ -1021,13 +1021,13 @@
         // Modo cadastro
         const paciente = {
           id: Date.now(),
-          nome: document.getElementById('nome').value,
+          nome: document.getElementById('nome').value.toUpperCase(),
           cpf: document.getElementById('cpf').value,
           dataNascimento: document.getElementById('dataNascimento').value,
           telefone: document.getElementById('telefone').value,
           genero: document.getElementById('genero').value === 'outro' ? document.getElementById('outroGenero').value : document.getElementById('genero').value,
           laboratorio: document.getElementById('laboratorio').value,
-          endereco: document.getElementById('endereco').value,
+          endereco: document.getElementById('endereco').value.toUpperCase(),
           exames: [...examesSelecionados],
           dataCadastro: new Date().toLocaleDateString('pt-BR')
         };
@@ -1195,7 +1195,7 @@
     document.getElementById('formEdicao').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      pacienteEditando.nome = document.getElementById('editNome').value;
+      pacienteEditando.nome = document.getElementById('editNome').value.toUpperCase();
       pacienteEditando.telefone = document.getElementById('editTelefone').value;
       pacienteEditando.genero = document.getElementById('editGenero').value === 'outro' ? document.getElementById('editOutroGenero').value : document.getElementById('editGenero').value;
       
@@ -1278,7 +1278,17 @@
     function criarBackupAutomatico() {
       if (pacientes.length === 0) return;
       
-      const dadosExcel = pacientes.map(p => ({
+      // Ordenar do mais novo para o mais antigo (mesma ordem da tabela)
+      const pacientesOrdenados = [...pacientes].sort((a, b) => {
+        const dataA = new Date(a.dataCadastro.split('/').reverse().join('-'));
+        const dataB = new Date(b.dataCadastro.split('/').reverse().join('-'));
+        if (dataB.getTime() !== dataA.getTime()) {
+          return dataB.getTime() - dataA.getTime();
+        }
+        return b.id - a.id;
+      });
+      
+      const dadosExcel = pacientesOrdenados.map(p => ({
         'Data Cadastro': p.dataCadastro,
         'Nome': p.nome,
         'CNS/CPF': p.cpf,
@@ -1312,7 +1322,17 @@
         return;
       }
       
-      const dadosExcel = pacientes.map(p => ({
+      // Ordenar do mais novo para o mais antigo (mesma ordem da tabela)
+      const pacientesOrdenados = [...pacientes].sort((a, b) => {
+        const dataA = new Date(a.dataCadastro.split('/').reverse().join('-'));
+        const dataB = new Date(b.dataCadastro.split('/').reverse().join('-'));
+        if (dataB.getTime() !== dataA.getTime()) {
+          return dataB.getTime() - dataA.getTime();
+        }
+        return b.id - a.id;
+      });
+      
+      const dadosExcel = pacientesOrdenados.map(p => ({
         'Data Cadastro': p.dataCadastro,
         'Nome': p.nome,
         'CNS/CPF': p.cpf,
@@ -1430,13 +1450,13 @@
               
               return {
                 id: Date.now() + index,
-                nome: row['Nome'] || '',
+                nome: (row['Nome'] || '').toUpperCase(),
                 cpf: formatarCNS(row['CNS/CPF']) || '',
                 dataNascimento: dataNasc,
                 telefone: row['Telefone'] || '',
                 genero: row['Gênero'] === 'Masculino' ? 'masculino' : row['Gênero'] === 'Feminino' ? 'feminino' : row['Gênero'] || '',
                 laboratorio: row['Laboratório'] === 'Apolo' ? 'apolo' : row['Laboratório'] === 'Queiroz' ? 'queiroz' : row['Laboratório'] === 'São Lourenço' ? 'sao_lourenco' : row['Laboratório'] || '',
-                endereco: row['Endereço'] || '',
+                endereco: (row['Endereço'] || '').toUpperCase(),
                 exames: processarExames(row['Exames']),
                 dataCadastro: dataCad
               };
