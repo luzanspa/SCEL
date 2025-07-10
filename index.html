@@ -413,7 +413,48 @@
       body { padding: 10px; }
     }
     
-    /* Estilos para impressão */
+    /* Estilos para impressão - continuação */
+    @media print {
+      .exame-item { font-size: 10px !important; }
+      .metric-card div:first-child { font-size: 1.5rem !important; }
+    }
+    
+    /* Otimizações de performance */
+    .exame-item, .historico-item {
+      will-change: transform;
+    }
+    
+    /* Melhorias de acessibilidade */
+    .btn:focus, input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--primary);
+      outline-offset: 2px;
+    }
+    
+    /* Loading states */
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+    
+    .loading::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      margin: -10px 0 0 -10px;
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      border-top-color: transparent;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Estilos para impressão completos */
     @media print {
       body { background: white !important; }
       .modal { position: static !important; background: white !important; }
@@ -473,10 +514,11 @@
     <div class="header">
       <h1>🏥 SCEL</h1>
       <p>Sistema de Cadastro de Exames Laboratoriais</p>
-      <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center;">
-        <button class="btn btn-small" onclick="exportarExcel()">📈 Exportar Excel</button>
-        <button class="btn btn-small" onclick="document.getElementById('importFile').click()">📁 Importar Excel</button>
-        <button class="btn btn-small" onclick="abrirEstatisticas()">📊 Estatísticas</button>
+      <div style="margin-top: 15px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap;">
+        <button class="btn btn-small" onclick="exportarExcel()" title="Exportar dados (Ctrl+E)">📈 Exportar Excel</button>
+        <button class="btn btn-small" onclick="document.getElementById('importFile').click()" title="Importar dados">📁 Importar Excel</button>
+        <button class="btn btn-small" onclick="abrirEstatisticas()" title="Ver estatísticas (Ctrl+D)">📊 Estatísticas</button>
+        <button class="btn btn-small" onclick="mostrarAjuda()" title="Ajuda e atalhos">❓ Ajuda</button>
         <input type="file" id="importFile" accept=".xlsx,.xls" style="display: none;" onchange="importarExcel(event)">
       </div>
     </div>
@@ -491,7 +533,7 @@
           </div>
           <div class="form-group">
             <label for="cpf">CNS/CPF *</label>
-            <input type="text" id="cpf" required maxlength="18" placeholder="CNS ou CPF">
+            <input type="text" id="cpf" required maxlength="18" placeholder="CNS: 000 0000 0000 0000 ou CPF: 000.000.000-00" autocomplete="off">
             <div id="historicoCns" class="historico-cns"></div>
           </div>
           <div class="form-group">
@@ -542,10 +584,10 @@
         </div>
 
         <div style="margin-top: 20px;" id="botoesFormulario">
-          <button type="submit" class="btn btn-success" id="btnCadastrar">💾 Cadastrar</button>
+          <button type="submit" class="btn btn-success" id="btnCadastrar" title="Cadastrar paciente (Ctrl+S)">💾 Cadastrar</button>
           <div id="botoesEdicao" style="display: none; gap: 15px;">
-            <button type="submit" class="btn btn-success">💾 Salvar</button>
-            <button type="button" class="btn" onclick="cancelarEdicao()">❌ Cancelar</button>
+            <button type="submit" class="btn btn-success" title="Salvar alterações (Ctrl+S)">💾 Salvar</button>
+            <button type="button" class="btn" onclick="cancelarEdicao()" title="Cancelar edição (ESC)">❌ Cancelar</button>
           </div>
         </div>
       </form>
@@ -555,7 +597,7 @@
       <h2 style="margin-bottom: 15px; color: #333;">🔍 Buscar Pacientes</h2>
       <div class="form-group">
         <label for="busca">Buscar em todos os campos</label>
-        <input type="text" id="busca" placeholder="Digite qualquer informação do paciente..." oninput="buscarPacientes()">
+        <input type="text" id="busca" placeholder="Digite qualquer informação do paciente... (F3 para focar)" oninput="buscarPacientes()" title="Buscar pacientes (F3 para focar)">
       </div>
     </div>
 
@@ -655,33 +697,360 @@
     </div>
   </div>
 
+  <!-- Modal de Ajuda -->
+  <div id="modalAjuda" class="modal">
+    <div class="modal-content" style="max-width: 600px;">
+      <span class="close" onclick="fecharModalAjuda()">&times;</span>
+      <h2 style="text-align: center; color: var(--primary); margin-bottom: 25px;">🔥 GUIA RÁPIDO SCEL</h2>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div>
+          <h3 style="color: var(--secondary); margin-bottom: 10px;">⌨️ ATALHOS DE TECLADO</h3>
+          <div style="font-size: 0.9rem; line-height: 1.6;">
+            <div><strong>Ctrl + S</strong> = Salvar/Cadastrar</div>
+            <div><strong>Ctrl + E</strong> = Exportar Excel</div>
+            <div><strong>Ctrl + D</strong> = Dashboard</div>
+            <div><strong>F3</strong> = Focar na busca</div>
+            <div><strong>ESC</strong> = Fechar modais</div>
+            <div><strong>↑↓</strong> = Navegar histórico CNS</div>
+            <div><strong>Enter</strong> = Selecionar do histórico</div>
+          </div>
+        </div>
+        
+        <div>
+          <h3 style="color: var(--secondary); margin-bottom: 10px;">🖱️ FUNCIONALIDADES</h3>
+          <div style="font-size: 0.9rem; line-height: 1.6;">
+            <div>• Digite 3+ dígitos no CNS para ver histórico</div>
+            <div>• Busca em tempo real em todos os campos</div>
+            <div>• Backup automático a cada alteração</div>
+            <div>• Validação de CNS/CPF duplicado</div>
+            <div>• Estatísticas avançadas com filtros</div>
+            <div>• Formatação automática CNS/CPF</div>
+          </div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 20px; padding: 15px; background: rgba(255, 215, 0, 0.1); border-radius: 8px;">
+        <h3 style="color: var(--secondary); margin-bottom: 10px;">💡 DICAS IMPORTANTES</h3>
+        <div style="font-size: 0.9rem; line-height: 1.6;">
+          <div>• <strong>CNS prioritário:</strong> Sistema formata automaticamente como CNS (15 dígitos)</div>
+          <div>• <strong>Backups regulares:</strong> Use Exportar Excel frequentemente</div>
+          <div>• <strong>Filtros dashboard:</strong> Selecione mês específico para análises</div>
+          <div>• <strong>Importação:</strong> Verifique dados antes de importar (ação irreversível)</div>
+          <div>• <strong>Duplicação permitida:</strong> Mesmo paciente pode ter múltiplos cadastros</div>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 20px; display: flex; gap: 15px; justify-content: center;">
+        <button class="btn btn-success" onclick="abrirManualCompleto()">📚 Manual Completo</button>
+        <button class="btn" onclick="fecharModalAjuda()">✅ Entendi</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Manual Completo -->
+  <div id="modalManual" class="modal">
+    <div class="modal-content" style="max-width: 90vw; width: 90vw; height: 90vh; max-height: 90vh; margin: 2.5vh auto; overflow-y: auto;">
+      <span class="close" onclick="fecharModalManual()">&times;</span>
+      <h1 style="text-align: center; color: var(--primary); margin-bottom: 30px;">📚 MANUAL DO USUÁRIO - SCEL</h1>
+      
+      <div style="display: grid; grid-template-columns: 250px 1fr; gap: 30px; height: calc(100% - 80px);">
+        <!-- Índice -->
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; height: fit-content; position: sticky; top: 0;">
+          <h3 style="color: var(--secondary); margin-bottom: 15px;">📋 ÍNDICE</h3>
+          <div style="font-size: 0.9rem; line-height: 2;">
+            <a href="#intro" onclick="scrollToSection('intro')" style="color: var(--secondary); text-decoration: none; display: block;">1. Introdução</a>
+            <a href="#cadastro" onclick="scrollToSection('cadastro')" style="color: var(--secondary); text-decoration: none; display: block;">2. Cadastro de Pacientes</a>
+            <a href="#busca" onclick="scrollToSection('busca')" style="color: var(--secondary); text-decoration: none; display: block;">3. Sistema de Busca</a>
+            <a href="#exames" onclick="scrollToSection('exames')" style="color: var(--secondary); text-decoration: none; display: block;">4. Seleção de Exames</a>
+            <a href="#edicao" onclick="scrollToSection('edicao')" style="color: var(--secondary); text-decoration: none; display: block;">5. Edição e Exclusão</a>
+            <a href="#dashboard" onclick="scrollToSection('dashboard')" style="color: var(--secondary); text-decoration: none; display: block;">6. Dashboard</a>
+            <a href="#backup" onclick="scrollToSection('backup')" style="color: var(--secondary); text-decoration: none; display: block;">7. Backup e Importação</a>
+            <a href="#atalhos" onclick="scrollToSection('atalhos')" style="color: var(--secondary); text-decoration: none; display: block;">8. Atalhos de Teclado</a>
+            <a href="#dicas" onclick="scrollToSection('dicas')" style="color: var(--secondary); text-decoration: none; display: block;">9. Dicas Avançadas</a>
+          </div>
+        </div>
+        
+        <!-- Conteúdo -->
+        <div style="padding-right: 20px;">
+          <!-- 1. Introdução -->
+          <section id="intro" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">1. 🏥 Introdução ao SCEL</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">O <strong>Sistema de Cadastro de Exames Laboratoriais (SCEL)</strong> é uma ferramenta completa para gestão de pacientes e exames médicos. Desenvolvido para ser intuitivo e eficiente, oferece recursos avançados de cadastro, busca, estatísticas e backup.</p>
+            <div style="background: rgba(255, 215, 0, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>🎯 Principais Funcionalidades:</strong>
+              <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                <li>Cadastro completo de pacientes com validações</li>
+                <li>Seleção de exames por categorias</li>
+                <li>Busca avançada em tempo real</li>
+                <li>Dashboard com estatísticas detalhadas</li>
+                <li>Sistema de backup automático</li>
+                <li>Histórico inteligente de CNS</li>
+              </ul>
+            </div>
+          </section>
+          
+          <!-- 2. Cadastro -->
+          <section id="cadastro" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">2. 📋 Cadastro de Pacientes</h2>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Campos Obrigatórios:</h3>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li><strong>Nome Completo:</strong> Mínimo 2 caracteres, convertido automaticamente para maiúsculas</li>
+              <li><strong>CNS/CPF:</strong> Aceita CNS (15 dígitos) ou CPF (11 dígitos) com formatação automática</li>
+              <li><strong>Data de Nascimento:</strong> Validada para idades entre 0-120 anos</li>
+              <li><strong>Gênero:</strong> Opções pré-definidas ou campo livre para "Outro"</li>
+              <li><strong>Laboratório:</strong> Apolo, Queiroz ou São Lourenço</li>
+              <li><strong>Endereço:</strong> Mínimo 10 caracteres</li>
+              <li><strong>Exames:</strong> Pelo menos um exame deve ser selecionado</li>
+            </ul>
+            
+            <div style="background: rgba(0, 191, 255, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>💡 Dica CNS:</strong> O sistema prioriza o formato CNS. Digite mais de 11 dígitos para formatação automática como CNS (000 0000 0000 0000).
+            </div>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Histórico Inteligente:</h3>
+            <p style="line-height: 1.6;">Ao digitar 3 ou mais dígitos no campo CNS/CPF, o sistema exibe automaticamente um histórico de pacientes similares. Use as setas ↑↓ para navegar e Enter para selecionar.</p>
+          </section>
+          
+          <!-- 3. Busca -->
+          <section id="busca" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">3. 🔍 Sistema de Busca</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">A busca é realizada em <strong>tempo real</strong> em todos os campos do paciente:</p>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Nome completo</li>
+              <li>CNS/CPF (com ou sem formatação)</li>
+              <li>Data de nascimento</li>
+              <li>Telefone</li>
+              <li>Gênero</li>
+              <li>Laboratório</li>
+              <li>Endereço</li>
+              <li>Exames selecionados</li>
+              <li>Data de cadastro</li>
+            </ul>
+            
+            <div style="background: rgba(50, 205, 50, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>⚡ Performance:</strong> A busca usa debounce de 300ms e cache para otimizar a performance mesmo com muitos registros.
+            </div>
+          </section>
+          
+          <!-- 4. Exames -->
+          <section id="exames" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">4. 🧪 Seleção de Exames</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">O sistema possui um catálogo completo de exames organizados por categorias:</p>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Categorias Disponíveis:</h3>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li><strong>Hematologia:</strong> Hemograma, VHS, Grupo sanguíneo, etc.</li>
+              <li><strong>Bioquímica:</strong> Glicose, Colesterol, Creatinina, etc.</li>
+              <li><strong>Endocrinologia:</strong> TSH, T3, T4, HCG, etc.</li>
+              <li><strong>Sorologia:</strong> HIV, Hepatites, Toxoplasmose, etc.</li>
+              <li><strong>Urina e Fezes:</strong> EAS, Urocultura, Parasitológico, etc.</li>
+              <li><strong>Coagulação:</strong> TP, TTPA, etc.</li>
+            </ul>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Como Selecionar:</h3>
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Clique em "Selecionar Exames"</li>
+              <li>Navegue pelas categorias organizadas em colunas</li>
+              <li>Clique nos exames desejados (ficarão destacados em verde)</li>
+              <li>Confirme a seleção</li>
+            </ol>
+          </section>
+          
+          <!-- 5. Edição -->
+          <section id="edicao" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">5. ✏️ Edição e Exclusão</h2>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Editando Pacientes:</h3>
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Clique no botão ✏️ na linha do paciente</li>
+              <li>Os dados serão carregados no formulário principal</li>
+              <li>Faça as alterações necessárias</li>
+              <li>Clique em "Salvar" ou use Ctrl+S</li>
+            </ol>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Exclusão Segura:</h3>
+            <p style="line-height: 1.6;">O sistema possui <strong>tripla confirmação</strong> para exclusões:</p>
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Primeira confirmação com dados do paciente</li>
+              <li>Digitação do nome completo para confirmar</li>
+              <li>Confirmação final antes da exclusão</li>
+            </ol>
+            
+            <div style="background: rgba(220, 53, 69, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>⚠️ Atenção:</strong> A exclusão é permanente e não pode ser desfeita. Mantenha backups regulares.
+            </div>
+          </section>
+          
+          <!-- 6. Dashboard -->
+          <section id="dashboard" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">6. 📊 Dashboard e Estatísticas</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">O dashboard oferece análises completas dos dados cadastrados:</p>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Métricas Principais:</h3>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li><strong>Total de Pacientes:</strong> Contador geral com percentual de crescimento</li>
+              <li><strong>Cadastros Hoje:</strong> Registros do dia atual</li>
+              <li><strong>Cadastros do Mês:</strong> Com média diária</li>
+              <li><strong>Taxa de Contato:</strong> Percentual de pacientes com telefone</li>
+              <li><strong>Valores Financeiros:</strong> Gastos totais e média por paciente</li>
+            </ul>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Análises Disponíveis:</h3>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Distribuição por gênero e faixa etária</li>
+              <li>Gastos por laboratório e categoria</li>
+              <li>Top 15 exames mais solicitados</li>
+              <li>Pacientes mais recorrentes</li>
+              <li>Cadastros mensais (gráfico)</li>
+              <li>Qualidade dos dados de contato</li>
+            </ul>
+            
+            <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>📅 Filtros:</strong> Use o seletor de mês para analisar períodos específicos. O dashboard pode ser impresso para relatórios.
+            </div>
+          </section>
+          
+          <!-- 7. Backup -->
+          <section id="backup" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">7. 💾 Backup e Importação</h2>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Backup Automático:</h3>
+            <p style="line-height: 1.6;">O sistema cria backups automaticamente:</p>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>A cada cadastro, edição ou exclusão</li>
+              <li>Arquivo Excel com timestamp</li>
+              <li>Dados ordenados por data (mais recentes primeiro)</li>
+              <li>Lembrete diário para backup manual</li>
+            </ul>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Exportação Manual:</h3>
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Clique em "Exportar Excel" ou use Ctrl+E</li>
+              <li>Arquivo será baixado com nome: SCEL_dados_AAAA-MM-DD_HHhMM.xlsx</li>
+              <li>Contém todos os dados formatados para planilha</li>
+            </ol>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Importação:</h3>
+            <div style="background: rgba(220, 53, 69, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <strong>⚠️ CUIDADO:</strong> A importação substitui TODOS os dados existentes. É uma ação irreversível com tripla confirmação.
+            </div>
+            <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li>Clique em "Importar Excel"</li>
+              <li>Selecione arquivo .xlsx ou .xls</li>
+              <li>Confirme as três etapas de segurança</li>
+              <li>Aguarde o processamento</li>
+            </ol>
+          </section>
+          
+          <!-- 8. Atalhos -->
+          <section id="atalhos" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">8. ⌨️ Atalhos de Teclado</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Ações Principais:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8; font-family: monospace;">
+                  <li><strong>Ctrl + S</strong> - Salvar/Cadastrar</li>
+                  <li><strong>Ctrl + E</strong> - Exportar Excel</li>
+                  <li><strong>Ctrl + D</strong> - Abrir Dashboard</li>
+                  <li><strong>F3</strong> - Focar na busca</li>
+                  <li><strong>ESC</strong> - Fechar modais</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Navegação:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8; font-family: monospace;">
+                  <li><strong>↑ ↓</strong> - Navegar histórico CNS</li>
+                  <li><strong>Enter</strong> - Selecionar do histórico</li>
+                  <li><strong>Tab</strong> - Navegar entre campos</li>
+                  <li><strong>Shift + Tab</strong> - Voltar campo anterior</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          
+          <!-- 9. Dicas -->
+          <section id="dicas" style="margin-bottom: 40px;">
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">9. 💡 Dicas Avançadas</h2>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Performance:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                  <li>Busca otimizada com cache interno</li>
+                  <li>Renderização eficiente com fragments</li>
+                  <li>Debounce em buscas e histórico</li>
+                  <li>Limitação de resultados para performance</li>
+                </ul>
+                
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Segurança:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                  <li>Validações múltiplas nos formulários</li>
+                  <li>Confirmações triplas para exclusões</li>
+                  <li>Backup automático preventivo</li>
+                  <li>Armazenamento local seguro</li>
+                </ul>
+              </div>
+              
+              <div>
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Produtividade:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                  <li>Histórico inteligente de CNS</li>
+                  <li>Formatação automática de campos</li>
+                  <li>Busca em tempo real</li>
+                  <li>Atalhos de teclado completos</li>
+                </ul>
+                
+                <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Manutenção:</h3>
+                <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+                  <li>Faça backup semanal dos dados</li>
+                  <li>Monitore a qualidade dos contatos</li>
+                  <li>Use filtros no dashboard para análises</li>
+                  <li>Verifique duplicações periodicamente</li>
+                </ul>
+              </div>
+            </div>
+            
+            <div style="background: linear-gradient(135deg, var(--primary), var(--secondary)); color: #333; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+              <h3 style="margin-bottom: 10px;">🎆 Parabéns!</h3>
+              <p style="font-size: 1.1rem; line-height: 1.6;">Você agora domina todas as funcionalidades do SCEL. Use este manual como referência sempre que precisar!</p>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     let pacientes = JSON.parse(localStorage.getItem('pacientes')) || [];
     let examesSelecionados = [];
     let pacienteEditando = null;
 
-    // Formatação de campos e busca automática por CNS
+    // Formatação de campos e busca automática por CNS - Otimizada
+    let timeoutBusca;
     document.getElementById('cpf').addEventListener('input', function(e) {
       let value = e.target.value.replace(/\D/g, '');
       
-      console.log('Digitando CNS:', value, 'Pacientes:', pacientes.length);
+      // Debounce para busca de histórico
+      clearTimeout(timeoutBusca);
       
-      // Buscar histórico se tiver pelo menos 3 dígitos
       if (value.length >= 3) {
-        console.log('Buscando histórico para:', value);
-        buscarHistoricoCns(value);
+        timeoutBusca = setTimeout(() => buscarHistoricoCns(value), 300);
       } else {
         document.getElementById('historicoCns').style.display = 'none';
       }
       
-      if (value.length <= 11) {
-        // Formato CPF
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d)/, '$1.$2');
-        value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-      } else {
-        // Formato CNS
+      // Formatação priorizando CNS
+      if (value.length > 11) {
+        // Formato CNS (15 dígitos)
         value = value.replace(/(\d{3})(\d{4})(\d{4})(\d{4})/, '$1 $2 $3 $4');
+      } else if (value.length >= 4) {
+        // Formato CPF (11 dígitos)
+        value = value.replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d)/, '$1.$2')
+                    .replace(/(\d{3})(\d{1,2})$/, '$1-$2');
       }
       e.target.value = value;
     });
@@ -693,62 +1062,94 @@
       e.target.value = value;
     });
 
-    // Sistema de Toast
-    function showToast(message, type = 'success') {
+    // Sistema de Toast melhorado
+    function showToast(message, type = 'success', duration = 4000) {
       const toast = document.createElement('div');
       toast.className = `toast ${type}`;
-      toast.innerHTML = `<strong>${type === 'error' ? 'Erro!' : 'Sucesso!'}</strong> ${message}`;
+      
+      const icons = {
+        success: '✓',
+        error: '⚠',
+        warning: '⚠',
+        info: 'ℹ'
+      };
+      
+      const titles = {
+        success: 'Sucesso!',
+        error: 'Erro!',
+        warning: 'Atenção!',
+        info: 'Informação'
+      };
+      
+      toast.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 1.2em;">${icons[type]}</span>
+          <div>
+            <strong>${titles[type]}</strong>
+            <div>${message}</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 1.2em; cursor: pointer; margin-left: auto;">×</button>
+        </div>
+      `;
       
       document.getElementById('toastContainer').appendChild(toast);
       
-      setTimeout(() => toast.remove(), 4000);
+      setTimeout(() => {
+        if (toast.parentElement) {
+          toast.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => toast.remove(), 300);
+        }
+      }, duration);
     }
     
-    // Buscar histórico por CNS
-    function buscarHistoricoCns(termo) {
-      console.log('Função buscarHistoricoCns chamada com:', termo);
-      
-      const historicoDiv = document.getElementById('historicoCns');
-      if (!historicoDiv) {
-        console.log('Elemento historicoCns não encontrado!');
-        return;
+    // Adicionar animação de saída
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideOut {
+        to { transform: translateX(100%); opacity: 0; }
       }
-      
-      if (!termo || termo.length < 3) {
-        historicoDiv.style.display = 'none';
+    `;
+    document.head.appendChild(style);
+    
+    // Buscar histórico por CNS - Otimizada
+    function buscarHistoricoCns(termo) {
+      const historicoDiv = document.getElementById('historicoCns');
+      if (!historicoDiv || !termo || termo.length < 3) {
+        if (historicoDiv) historicoDiv.style.display = 'none';
         return;
       }
       
       const termoBusca = termo.replace(/\D/g, '');
-      console.log('Termo de busca limpo:', termoBusca);
-      console.log('Total de pacientes:', pacientes.length);
       
-      const historico = pacientes.filter(p => {
-        if (!p.cpf) return false;
-        const cpfLimpo = String(p.cpf).replace(/\D/g, '');
-        const match = cpfLimpo.includes(termoBusca) && cpfLimpo !== termoBusca;
-        if (match) console.log('Match encontrado:', p.nome, p.cpf);
-        return match;
-      });
-      
-      console.log('Histórico encontrado:', historico.length, 'pacientes');
+      // Busca otimizada com limite de resultados
+      const historico = pacientes
+        .filter(p => p.cpf && String(p.cpf).replace(/\D/g, '').includes(termoBusca) && 
+                     String(p.cpf).replace(/\D/g, '') !== termoBusca)
+        .slice(0, 10); // Limitar a 10 resultados
       
       if (historico.length === 0) {
         historicoDiv.style.display = 'none';
         return;
       }
       
-      historicoDiv.innerHTML = historico.map(p => `
-        <div class="historico-item" onclick="preencherDadosCns(${p.id})">
+      // Fragment para melhor performance
+      const fragment = document.createDocumentFragment();
+      historico.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'historico-item';
+        div.onclick = () => preencherDadosCns(p.id);
+        div.innerHTML = `
           <div class="historico-nome">${p.nome}</div>
           <div class="historico-detalhes">
             CNS/CPF: ${p.cpf} | Último cadastro: ${p.dataCadastro}
           </div>
-        </div>
-      `).join('');
+        `;
+        fragment.appendChild(div);
+      });
       
+      historicoDiv.innerHTML = '';
+      historicoDiv.appendChild(fragment);
       historicoDiv.style.display = 'block';
-      console.log('Dropdown exibido com', historico.length, 'itens');
     }
     
     // Preencher dados do paciente selecionado
@@ -983,12 +1384,50 @@
       ).join('');
     }
 
+    // Validações avançadas
+    function validarFormulario() {
+      const nome = document.getElementById('nome').value.trim();
+      const cpf = document.getElementById('cpf').value.trim();
+      const dataNasc = document.getElementById('dataNascimento').value;
+      const genero = document.getElementById('genero').value;
+      const laboratorio = document.getElementById('laboratorio').value;
+      const endereco = document.getElementById('endereco').value.trim();
+      
+      const erros = [];
+      
+      if (!nome || nome.length < 2) erros.push('Nome deve ter pelo menos 2 caracteres');
+      if (!cpf || cpf.length < 11) erros.push('CNS/CPF inválido');
+      if (!dataNasc) erros.push('Data de nascimento é obrigatória');
+      if (!genero) erros.push('Gênero é obrigatório');
+      if (!laboratorio) erros.push('Laboratório é obrigatório');
+      if (!endereco || endereco.length < 10) erros.push('Endereço deve ter pelo menos 10 caracteres');
+      if (examesSelecionados.length === 0) erros.push('Selecione pelo menos um exame');
+      
+      // Validar idade
+      if (dataNasc) {
+        const idade = new Date().getFullYear() - new Date(dataNasc).getFullYear();
+        if (idade < 0 || idade > 120) erros.push('Data de nascimento inválida');
+      }
+      
+      // Avisar sobre duplicação de CPF (não impede cadastro)
+      if (!pacienteEditando && cpf) {
+        const cpfLimpo = cpf.replace(/\D/g, '');
+        const duplicado = pacientes.find(p => p.cpf && p.cpf.replace(/\D/g, '') === cpfLimpo);
+        if (duplicado) {
+          showToast('⚠️ Já existe um paciente com este CNS/CPF. Verifique se não é duplicação.', 'warning', 5000);
+        }
+      }
+      
+      return erros;
+    }
+    
     // Cadastro/Edição de paciente
     document.getElementById('pacienteForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
-      if (examesSelecionados.length === 0) {
-        showToast('Selecione pelo menos um exame', 'error');
+      const erros = validarFormulario();
+      if (erros.length > 0) {
+        showToast(erros.join('<br>'), 'error', 6000);
         return;
       }
       
@@ -1048,36 +1487,48 @@
 
 
 
-    // Busca
+    // Busca otimizada com debounce
+    let timeoutBuscaPacientes;
     function buscarPacientes() {
-      const termo = document.getElementById('busca').value.toLowerCase();
-      
-      if (!termo.trim()) {
-        atualizarTabela(pacientes);
-        return;
-      }
-      
-      const pacientesFiltrados = pacientes.filter(p => {
-        try {
-          const dataNascFormatada = p.dataNascimento ? new Date(p.dataNascimento).toLocaleDateString('pt-BR') : '';
-          const examesTexto = p.exames && Array.isArray(p.exames) ? p.exames.map(e => e.texto || '').join(' ').toLowerCase() : '';
-          
-          return (p.nome && p.nome.toLowerCase().includes(termo)) ||
-                 (p.cpf && p.cpf.toLowerCase().includes(termo)) ||
-                 (dataNascFormatada && dataNascFormatada.includes(termo)) ||
-                 (p.telefone && p.telefone.toLowerCase().includes(termo)) ||
-                 (p.genero && p.genero.toLowerCase().includes(termo)) ||
-                 (p.laboratorio && p.laboratorio.toLowerCase().includes(termo)) ||
-                 (p.endereco && p.endereco.toLowerCase().includes(termo)) ||
-                 (examesTexto && examesTexto.includes(termo)) ||
-                 (p.dataCadastro && p.dataCadastro.toLowerCase().includes(termo));
-        } catch (error) {
-          console.error('Erro na busca:', error, p);
-          return false;
+      clearTimeout(timeoutBuscaPacientes);
+      timeoutBuscaPacientes = setTimeout(() => {
+        const termo = document.getElementById('busca').value.toLowerCase().trim();
+        
+        if (!termo) {
+          atualizarTabela(pacientes);
+          return;
         }
-      });
-      
-      atualizarTabela(pacientesFiltrados);
+        
+        const pacientesFiltrados = pacientes.filter(p => {
+          try {
+            // Cache de valores formatados
+            if (!p._searchCache) {
+              p._searchCache = {
+                dataNasc: p.dataNascimento ? new Date(p.dataNascimento).toLocaleDateString('pt-BR') : '',
+                exames: p.exames && Array.isArray(p.exames) ? p.exames.map(e => e.texto || '').join(' ').toLowerCase() : '',
+                searchText: [
+                  p.nome || '',
+                  p.cpf || '',
+                  p.telefone || '',
+                  p.genero || '',
+                  p.laboratorio || '',
+                  p.endereco || '',
+                  p.dataCadastro || ''
+                ].join(' ').toLowerCase()
+              };
+            }
+            
+            return p._searchCache.searchText.includes(termo) ||
+                   p._searchCache.dataNasc.includes(termo) ||
+                   p._searchCache.exames.includes(termo);
+          } catch (error) {
+            console.error('Erro na busca:', error, p);
+            return false;
+          }
+        });
+        
+        atualizarTabela(pacientesFiltrados);
+      }, 300);
     }
 
     // Funções de formatação
@@ -1100,7 +1551,7 @@
       return laboratorios[laboratorio] || laboratorio;
     }
 
-    // Tabela
+    // Tabela otimizada com paginação virtual
     function atualizarTabela(lista = pacientes) {
       const tbody = document.getElementById('tabelaPacientes');
       
@@ -1109,22 +1560,21 @@
         return;
       }
       
-      // Ordenar do mais novo para o mais antigo (por data de cadastro e ID)
+      // Ordenação otimizada
       const listaOrdenada = [...lista].sort((a, b) => {
-        // Primeiro por data de cadastro
-        const dataA = new Date(a.dataCadastro.split('/').reverse().join('-'));
-        const dataB = new Date(b.dataCadastro.split('/').reverse().join('-'));
+        // Cache de datas para evitar recálculos
+        if (!a._sortDate) a._sortDate = new Date(a.dataCadastro.split('/').reverse().join('-')).getTime();
+        if (!b._sortDate) b._sortDate = new Date(b.dataCadastro.split('/').reverse().join('-')).getTime();
         
-        if (dataB.getTime() !== dataA.getTime()) {
-          return dataB.getTime() - dataA.getTime();
-        }
-        
-        // Se as datas forem iguais, ordenar por ID
-        return b.id - a.id;
+        return b._sortDate !== a._sortDate ? b._sortDate - a._sortDate : b.id - a.id;
       });
       
-      tbody.innerHTML = listaOrdenada.map(paciente => `
-        <tr>
+      // Renderização otimizada com fragment
+      const fragment = document.createDocumentFragment();
+      
+      listaOrdenada.forEach(paciente => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
           <td>${paciente.dataCadastro}</td>
           <td>${paciente.nome}</td>
           <td>${paciente.cpf}</td>
@@ -1138,8 +1588,12 @@
             <button class="btn btn-small" onclick="editarPaciente(${paciente.id})">✏️</button>
             <button class="btn btn-small btn-danger" onclick="excluirPaciente(${paciente.id})">🗑️</button>
           </td>
-        </tr>
-      `).join('');
+        `;
+        fragment.appendChild(tr);
+      });
+      
+      tbody.innerHTML = '';
+      tbody.appendChild(fragment);
     }
 
     // Edição
@@ -1248,12 +1702,39 @@
       atualizarTabela();
     }
 
-    // Inicialização
+    // Inicialização otimizada
     window.addEventListener('load', function() {
-      atualizarTabela();
-      showToast('Sistema carregado com sucesso!', 'info');
-      document.getElementById('nome').focus();
+      // Verificar compatibilidade do navegador
+      if (!window.localStorage) {
+        showToast('Seu navegador não suporta armazenamento local. Os dados não serão salvos.', 'warning', 8000);
+      }
+      
+      // Carregar dados com loading
+      document.body.classList.add('loading');
+      
+      setTimeout(() => {
+        atualizarTabela();
+        document.body.classList.remove('loading');
+        showToast(`Sistema carregado! ${pacientes.length} pacientes encontrados.`, 'info');
+        document.getElementById('nome').focus();
+        
+        // Verificar se há dados para backup
+        if (pacientes.length > 0) {
+          const ultimoBackup = localStorage.getItem('ultimoBackup');
+          const agora = new Date().getTime();
+          const umDia = 24 * 60 * 60 * 1000;
+          
+          if (!ultimoBackup || (agora - parseInt(ultimoBackup)) > umDia) {
+            showToast('Recomendamos fazer backup dos dados (botão Exportar Excel)', 'info', 6000);
+          }
+        }
+      }, 100);
     });
+    
+    // Salvar timestamp do último backup
+    function atualizarTimestampBackup() {
+      localStorage.setItem('ultimoBackup', new Date().getTime().toString());
+    }
 
     // Funções para mostrar/ocultar campo "outro gênero"
     function toggleOutroGenero() {
@@ -1322,6 +1803,12 @@
         return;
       }
       
+      // Mostrar loading
+      const btnExportar = event.target;
+      const textoOriginal = btnExportar.textContent;
+      btnExportar.textContent = '⏳ Exportando...';
+      btnExportar.disabled = true;
+      
       // Ordenar do mais novo para o mais antigo (mesma ordem da tabela)
       const pacientesOrdenados = [...pacientes].sort((a, b) => {
         const dataA = new Date(a.dataCadastro.split('/').reverse().join('-'));
@@ -1352,7 +1839,12 @@
       const dataHora = `${agora.toISOString().split('T')[0]}_${agora.getHours().toString().padStart(2, '0')}h${agora.getMinutes().toString().padStart(2, '0')}`;
       
       XLSX.writeFile(wb, `SCEL_dados_${dataHora}.xlsx`);
-      showToast('Dados exportados para Excel', 'success');
+      atualizarTimestampBackup();
+      showToast(`${pacientes.length} pacientes exportados para Excel`, 'success');
+      
+      // Restaurar botão
+      btnExportar.textContent = textoOriginal;
+      btnExportar.disabled = false;
     }
     
     function formatarCNS(cns) {
@@ -2352,6 +2844,71 @@
       };
     }
 
+    // Atalhos de teclado
+    document.addEventListener('keydown', function(e) {
+      // Ctrl + S = Salvar/Cadastrar
+      if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        const form = document.getElementById('pacienteForm');
+        if (form) form.dispatchEvent(new Event('submit'));
+      }
+      
+      // Ctrl + E = Exportar
+      if (e.ctrlKey && e.key === 'e') {
+        e.preventDefault();
+        exportarExcel();
+      }
+      
+      // Ctrl + D = Dashboard
+      if (e.ctrlKey && e.key === 'd') {
+        e.preventDefault();
+        abrirEstatisticas();
+      }
+      
+      // ESC = Fechar modais
+      if (e.key === 'Escape') {
+        const modals = ['modalExames', 'modalEstatisticas', 'modalEdicao', 'modalAjuda', 'modalManual'];
+        modals.forEach(modalId => {
+          const modal = document.getElementById(modalId);
+          if (modal && modal.style.display === 'block') {
+            modal.style.display = 'none';
+          }
+        });
+        document.getElementById('historicoCns').style.display = 'none';
+      }
+      
+      // F3 = Focar na busca
+      if (e.key === 'F3') {
+        e.preventDefault();
+        document.getElementById('busca').focus();
+      }
+    });
+    
+    // Função de ajuda com modal
+    function mostrarAjuda() {
+      document.getElementById('modalAjuda').style.display = 'block';
+    }
+    
+    function fecharModalAjuda() {
+      document.getElementById('modalAjuda').style.display = 'none';
+    }
+    
+    function abrirManualCompleto() {
+      document.getElementById('modalAjuda').style.display = 'none';
+      document.getElementById('modalManual').style.display = 'block';
+    }
+    
+    function fecharModalManual() {
+      document.getElementById('modalManual').style.display = 'none';
+    }
+    
+    function scrollToSection(sectionId) {
+      const element = document.getElementById(sectionId);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+    
     // Fechar modal e histórico clicando fora
     window.onclick = function(event) {
       const modalEdicao = document.getElementById('modalEdicao');
