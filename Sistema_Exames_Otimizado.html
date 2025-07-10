@@ -1396,7 +1396,7 @@
       const erros = [];
       
       if (!nome || nome.length < 2) erros.push('Nome deve ter pelo menos 2 caracteres');
-      if (!cpf || cpf.length < 11) erros.push('CNS/CPF inválido');
+      if (!cpf || cpf.replace(/\D/g, '').length < 11) erros.push('CNS/CPF inválido');
       if (!dataNasc) erros.push('Data de nascimento é obrigatória');
       if (!genero) erros.push('Gênero é obrigatório');
       if (!laboratorio) erros.push('Laboratório é obrigatório');
@@ -1412,7 +1412,7 @@
       // Avisar sobre duplicação de CPF (não impede cadastro)
       if (!pacienteEditando && cpf) {
         const cpfLimpo = cpf.replace(/\D/g, '');
-        const duplicado = pacientes.find(p => p.cpf && p.cpf.replace(/\D/g, '') === cpfLimpo);
+        const duplicado = pacientes.find(p => p.cpf && String(p.cpf).replace(/\D/g, '') === cpfLimpo);
         if (duplicado) {
           showToast('⚠️ Já existe um paciente com este CNS/CPF. Verifique se não é duplicação.', 'warning', 5000);
         }
