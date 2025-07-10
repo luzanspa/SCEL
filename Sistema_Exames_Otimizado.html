@@ -758,6 +758,7 @@
         <!-- Índice -->
         <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; height: fit-content; position: sticky; top: 0;">
           <h3 style="color: var(--secondary); margin-bottom: 15px;">📋 ÍNDICE</h3>
+          <button class="btn btn-small" onclick="imprimirManual()" style="width: 100%; margin-bottom: 15px; background: linear-gradient(135deg, var(--info), #138496); color: white;">🖨️ Imprimir Manual</button>
           <div style="font-size: 0.9rem; line-height: 2;">
             <a href="#intro" onclick="scrollToSection('intro')" style="color: var(--secondary); text-decoration: none; display: block;">1. Introdução</a>
             <a href="#cadastro" onclick="scrollToSection('cadastro')" style="color: var(--secondary); text-decoration: none; display: block;">2. Cadastro de Pacientes</a>
@@ -836,22 +837,20 @@
           <!-- 4. Exames -->
           <section id="exames" style="margin-bottom: 40px;">
             <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">4. 🧪 Seleção de Exames</h2>
-            <p style="margin: 15px 0; line-height: 1.6;">O sistema possui um catálogo completo de exames organizados por categorias:</p>
+            <p style="margin: 15px 0; line-height: 1.6;">O sistema possui um catálogo completo de exames:</p>
             
-            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Categorias Disponíveis:</h3>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Organização dos Exames:</h3>
+            <p style="margin: 10px 0; line-height: 1.6;">Os exames estão organizados em <strong>ordem alfabética por código</strong> e distribuídos em 4 colunas para facilitar a visualização. Cada exame possui:</p>
             <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li><strong>Hematologia:</strong> Hemograma, VHS, Grupo sanguíneo, etc.</li>
-              <li><strong>Bioquímica:</strong> Glicose, Colesterol, Creatinina, etc.</li>
-              <li><strong>Endocrinologia:</strong> TSH, T3, T4, HCG, etc.</li>
-              <li><strong>Sorologia:</strong> HIV, Hepatites, Toxoplasmose, etc.</li>
-              <li><strong>Urina e Fezes:</strong> EAS, Urocultura, Parasitológico, etc.</li>
-              <li><strong>Coagulação:</strong> TP, TTPA, etc.</li>
+              <li><strong>Código:</strong> Identificação única do exame (ex: HEMO, GLI, TSH)</li>
+              <li><strong>Nome completo:</strong> Descrição detalhada do exame</li>
+              <li><strong>Categorias disponíveis:</strong> Hematologia, Bioquímica, Endocrinologia, Sorologia, Urina e Fezes, Coagulação</li>
             </ul>
             
             <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Como Selecionar:</h3>
             <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
               <li>Clique em "Selecionar Exames"</li>
-              <li>Navegue pelas categorias organizadas em colunas</li>
+              <li>Navegue pelos exames organizados alfabeticamente em 4 colunas</li>
               <li>Clique nos exames desejados (ficarão destacados em verde)</li>
               <li>Confirme a seleção</li>
             </ol>
@@ -884,62 +883,77 @@
           
           <!-- 6. Dashboard -->
           <section id="dashboard" style="margin-bottom: 40px;">
-            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">6. 📊 Dashboard e Estatísticas</h2>
-            <p style="margin: 15px 0; line-height: 1.6;">O dashboard oferece análises completas dos dados cadastrados:</p>
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">6. 📊 Relatórios e Estatísticas (Dashboard)</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">O Dashboard é como um painel de controle que mostra informações importantes sobre seu trabalho. É muito útil para você acompanhar como está indo o movimento do laboratório.</p>
             
-            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Métricas Principais:</h3>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Como abrir o Dashboard:</h3>
             <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li><strong>Total de Pacientes:</strong> Contador geral com percentual de crescimento</li>
-              <li><strong>Cadastros Hoje:</strong> Registros do dia atual</li>
-              <li><strong>Cadastros do Mês:</strong> Com média diária</li>
-              <li><strong>Taxa de Contato:</strong> Percentual de pacientes com telefone</li>
-              <li><strong>Valores Financeiros:</strong> Gastos totais e média por paciente</li>
+              <li>Clique no botão "📊 Estatísticas" no topo da tela</li>
+              <li>Ou aperte Ctrl+D no teclado</li>
             </ul>
             
-            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Análises Disponíveis:</h3>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">O que você vê no Dashboard:</h3>
+            
+            <h4 style="color: var(--secondary); margin: 15px 0 8px 0;">Números principais (cartões coloridos no topo):</h4>
             <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li>Distribuição por gênero e faixa etária</li>
-              <li>Gastos por laboratório e categoria</li>
-              <li>Top 15 exames mais solicitados</li>
-              <li>Pacientes mais recorrentes</li>
-              <li>Cadastros mensais (gráfico)</li>
-              <li>Qualidade dos dados de contato</li>
+              <li><strong>Total de Pacientes:</strong> Quantas pessoas você já cadastrou</li>
+              <li><strong>Cadastros Hoje:</strong> Quantas pessoas você atendeu hoje</li>
+              <li><strong>Cadastros do Mês:</strong> Quantas pessoas você atendeu neste mês</li>
+              <li><strong>Taxa de Contato:</strong> Quantos % dos pacientes têm telefone cadastrado</li>
+              <li><strong>Gastos Totais:</strong> Quanto dinheiro foi gasto em exames (soma dos valores)</li>
             </ul>
+            
+            <h4 style="color: var(--secondary); margin: 15px 0 8px 0;">Gráficos e análises:</h4>
+            <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
+              <li><strong>Gráfico mensal:</strong> Mostra quantos pacientes você cadastrou em cada mês</li>
+              <li><strong>Por gênero:</strong> Quantos homens, mulheres e outros você atendeu</li>
+              <li><strong>Por idade:</strong> Quantas crianças (0-18), adultos (19-59) e idosos (60+)</li>
+              <li><strong>Por laboratório:</strong> Quanto dinheiro foi gasto em cada laboratório</li>
+              <li><strong>Top 15 exames:</strong> Quais exames são mais pedidos</li>
+              <li><strong>Pacientes recorrentes:</strong> Quem já veio mais vezes</li>
+            </ul>
+            
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Filtrar por mês:</h3>
+            <p style="margin: 15px 0; line-height: 1.6;">No canto superior direito do Dashboard, você pode escolher um mês específico para ver apenas os dados daquele período. Isso é útil para fazer relatórios mensais.</p>
             
             <div style="background: rgba(255, 193, 7, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-              <strong>📅 Filtros:</strong> Use o seletor de mês para analisar períodos específicos. O dashboard pode ser impresso para relatórios.
+              <strong>🖨️ Imprimir:</strong> Clique no botão "🖨️ Imprimir" para gerar um relatório em papel com todas as estatísticas.
             </div>
           </section>
           
           <!-- 7. Backup -->
           <section id="backup" style="margin-bottom: 40px;">
-            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">7. 💾 Backup e Importação</h2>
+            <h2 style="color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 10px;">7. 💾 Como Fazer Backup (Não Perder Seus Dados)</h2>
+            <p style="margin: 15px 0; line-height: 1.6;">Backup é uma cópia de segurança dos seus dados. É muito importante fazer backup regularmente para não perder o trabalho se algo der errado no computador.</p>
             
             <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Backup Automático:</h3>
-            <p style="line-height: 1.6;">O sistema cria backups automaticamente:</p>
+            <p style="margin: 15px 0; line-height: 1.6;">O sistema faz backup sozinho sempre que você:</p>
             <ul style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li>A cada cadastro, edição ou exclusão</li>
-              <li>Arquivo Excel com timestamp</li>
-              <li>Dados ordenados por data (mais recentes primeiro)</li>
-              <li>Lembrete diário para backup manual</li>
+              <li>Cadastra um novo paciente</li>
+              <li>Altera dados de alguém</li>
+              <li>Apaga um paciente</li>
             </ul>
+            <p style="margin: 15px 0; line-height: 1.6;">Esse backup automático baixa um arquivo Excel no seu computador com todos os dados.</p>
             
-            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Exportação Manual:</h3>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Backup Manual (recomendado fazer toda semana):</h3>
             <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li>Clique em "Exportar Excel" ou use Ctrl+E</li>
-              <li>Arquivo será baixado com nome: SCEL_dados_AAAA-MM-DD_HHhMM.xlsx</li>
-              <li>Contém todos os dados formatados para planilha</li>
+              <li><strong>Clique em "📈 Exportar Excel"</strong> no topo da tela</li>
+              <li><strong>Ou aperte Ctrl+E</strong> no teclado</li>
+              <li><strong>O arquivo será baixado</strong> com nome tipo: SCEL_dados_2024-03-15_14h30.xlsx</li>
+              <li><strong>Guarde esse arquivo</strong> em um local seguro (pendrive, nuvem, etc.)</li>
             </ol>
             
-            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Importação:</h3>
+            <h3 style="color: var(--secondary); margin: 20px 0 10px 0;">Como Restaurar Dados (Importar):</h3>
             <div style="background: rgba(220, 53, 69, 0.1); padding: 15px; border-radius: 8px; margin: 15px 0;">
-              <strong>⚠️ CUIDADO:</strong> A importação substitui TODOS os dados existentes. É uma ação irreversível com tripla confirmação.
+              <strong>⚠️ ATENÇÃO:</strong> Importar dados apaga TUDO que está no sistema e coloca os dados do arquivo. Só faça isso se tiver certeza!
             </div>
+            
             <ol style="margin: 10px 0 0 20px; line-height: 1.8;">
-              <li>Clique em "Importar Excel"</li>
-              <li>Selecione arquivo .xlsx ou .xls</li>
-              <li>Confirme as três etapas de segurança</li>
-              <li>Aguarde o processamento</li>
+              <li><strong>Clique em "📁 Importar Excel"</strong></li>
+              <li><strong>Escolha o arquivo</strong> de backup que você quer restaurar</li>
+              <li><strong>Confirme 3 vezes:</strong> O sistema vai perguntar 3 vezes se tem certeza</li>
+              <li><strong>Digite "CONFIRMAR IMPORTACAO"</strong> quando pedido</li>
+              <li><strong>Aguarde:</strong> O sistema vai processar e restaurar todos os dados</li>
             </ol>
           </section>
           
@@ -2907,6 +2921,206 @@
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    }
+    
+    function imprimirManual() {
+      const printWindow = window.open('', '_blank');
+      const printContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>Manual do Usuário - SCEL</title>
+          <style>
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body { font-family: Arial, sans-serif; font-size: 11px; line-height: 1.4; padding: 20px; color: #333; }
+            h1 { text-align: center; margin-bottom: 30px; font-size: 18px; color: #333; page-break-after: avoid; }
+            h2 { font-size: 14px; margin: 25px 0 15px 0; color: #333; border-bottom: 2px solid #ffd700; padding-bottom: 5px; page-break-after: avoid; }
+            h3 { font-size: 12px; margin: 20px 0 10px 0; color: #666; page-break-after: avoid; }
+            p, li { margin-bottom: 8px; }
+            ul, ol { margin: 10px 0 15px 20px; }
+            section { margin-bottom: 30px; page-break-inside: avoid; }
+            .destaque { background: #fff3cd; padding: 10px; border-left: 4px solid #ffd700; margin: 15px 0; border-radius: 4px; }
+            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 15px 0; }
+            @media print {
+              body { font-size: 10px; }
+              h1 { font-size: 16px; }
+              h2 { font-size: 13px; }
+              h3 { font-size: 11px; }
+              section { page-break-inside: avoid; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>📚 MANUAL DO USUÁRIO - SCEL</h1>
+          <p style="text-align: center; margin-bottom: 30px; font-style: italic;">Sistema de Cadastro de Exames Laboratoriais</p>
+          
+          <section>
+            <h2>1. 🏥 O que é o SCEL?</h2>
+            <p>O <strong>Sistema de Cadastro de Exames Laboratoriais (SCEL)</strong> é um programa de computador criado para ajudar você a organizar e controlar informações de pacientes que fazem exames médicos.</p>
+            <p>Imagine que você trabalha em um laboratório ou clínica e precisa anotar os dados de cada pessoa que vem fazer exames. Antes, você fazia isso no papel ou em planilhas. Agora, com o SCEL, tudo fica mais fácil, rápido e organizado.</p>
+            <div class="destaque">
+              <strong>🎯 O que o SCEL faz por você:</strong>
+              <ul>
+                <li><strong>Cadastra pacientes:</strong> Guarda nome, documento, telefone, endereço de cada pessoa</li>
+                <li><strong>Organiza exames:</strong> Lista todos os tipos de exames disponíveis de forma organizada</li>
+                <li><strong>Busca rapidamente:</strong> Encontra qualquer paciente digitando parte do nome ou documento</li>
+                <li><strong>Mostra estatísticas:</strong> Conta quantos pacientes você atendeu, quais exames mais pedidos, etc.</li>
+                <li><strong>Faz backup:</strong> Salva seus dados automaticamente para não perder nada</li>
+                <li><strong>Lembra histórico:</strong> Quando você digita um CNS, mostra se já atendeu essa pessoa antes</li>
+              </ul>
+            </div>
+          </section>
+          
+          <section>
+            <h2>2. 📋 Como Cadastrar um Paciente</h2>
+            <p>Para cadastrar um novo paciente, você precisa preencher algumas informações obrigatórias. O sistema não deixa você salvar se alguma informação importante estiver faltando.</p>
+            
+            <h3>Informações que você DEVE preencher:</h3>
+            <ul>
+              <li><strong>Nome Completo:</strong> Digite o nome completo da pessoa. Precisa ter pelo menos 2 letras. O sistema automaticamente transforma tudo em letras maiúsculas.</li>
+              <li><strong>CNS ou CPF:</strong> Digite o Cartão Nacional de Saúde (15 números) ou CPF (11 números). O sistema formata automaticamente com pontos e traços.</li>
+              <li><strong>Data de Nascimento:</strong> Clique no calendário e escolha a data. O sistema verifica se a idade faz sentido (entre 0 e 120 anos).</li>
+              <li><strong>Gênero:</strong> Escolha Homem, Mulher ou Outro. Se escolher "Outro", aparece um campo para você escrever.</li>
+              <li><strong>Laboratório:</strong> Escolha entre Apolo, Queiroz ou São Lourenço.</li>
+              <li><strong>Endereço:</strong> Digite o endereço completo com rua, número, bairro, cidade. Precisa ter pelo menos 10 caracteres.</li>
+              <li><strong>Exames:</strong> Clique no botão "Selecionar Exames" e escolha pelo menos um exame da lista.</li>
+            </ul>
+            
+            <div class="destaque">
+              <strong>💡 Dica importante sobre CNS:</strong> O sistema prefere CNS ao invés de CPF. Se você digitar mais de 11 números, ele automaticamente formata como CNS (000 0000 0000 0000). Se digitar 11 números ou menos, formata como CPF (000.000.000-00).
+            </div>
+            
+            <h3>Histórico Inteligente - Uma ajuda especial:</h3>
+            <p>Quando você começa a digitar o CNS ou CPF, se já tiver atendido essa pessoa antes, o sistema mostra uma lista com os dados anteriores. Use as setas do teclado (↑↓) para escolher e aperte Enter para preencher automaticamente.</p>
+          </section>
+          
+          <section>
+            <h2>3. 🔍 Como Procurar Pacientes</h2>
+            <p>O sistema tem uma busca muito poderosa que procura em todas as informações do paciente ao mesmo tempo. Você não precisa lembrar exatamente como escreveu algo.</p>
+            
+            <h3>Como funciona a busca:</h3>
+            <p>Digite qualquer coisa no campo "Buscar em todos os campos" e o sistema procura em: nome, CNS/CPF, data de nascimento, telefone, gênero, laboratório, endereço, exames e data de cadastro.</p>
+            
+            <h3>Exemplos práticos:</h3>
+            <ul>
+              <li>Digite "Maria" - mostra todas as Marias</li>
+              <li>Digite "123" - mostra quem tem 123 no CPF, telefone ou qualquer lugar</li>
+              <li>Digite "Apolo" - mostra todos os pacientes do laboratório Apolo</li>
+              <li>Digite "hemograma" - mostra quem fez exame de hemograma</li>
+            </ul>
+          </section>
+          
+          <section>
+            <h2>4. 🧪 Como Escolher os Exames</h2>
+            <p>O sistema tem uma lista completa com todos os tipos de exames que você pode solicitar. Cada exame tem um código (como HEMO, GLI, TSH) e um nome completo explicando o que é.</p>
+            
+            <h3>Como os exames estão organizados:</h3>
+            <p>Todos os exames estão em <strong>ordem alfabética pelo código</strong> e aparecem em 4 colunas na tela para você ver mais exames de uma vez.</p>
+            
+            <h3>Passo a passo para selecionar exames:</h3>
+            <ol>
+              <li>Clique no botão "📋 Selecionar Exames" - Uma janela grande vai abrir</li>
+              <li>Procure pelos exames rolando a tela</li>
+              <li>Clique nos exames que quer - Cada exame fica verde (selecionado)</li>
+              <li>Para desmarcar, clique novamente no exame verde</li>
+              <li>Clique no botão "✓ Confirmar Seleção"</li>
+            </ol>
+          </section>
+          
+          <section>
+            <h2>5. ✏️ Como Alterar ou Apagar Dados</h2>
+            
+            <h3>Para alterar dados de um paciente:</h3>
+            <ol>
+              <li>Encontre o paciente usando a busca</li>
+              <li>Clique no botão ✏️ na linha do paciente</li>
+              <li>Os dados aparecem no formulário de cima</li>
+              <li>Faça as mudanças que precisar</li>
+              <li>Clique em "💾 Salvar" ou aperte Ctrl+S</li>
+            </ol>
+            
+            <h3>Para apagar um paciente (CUIDADO!):</h3>
+            <p>O sistema tem 3 confirmações para evitar que você apague alguém por engano. Quando você apaga, os dados desaparecem para sempre!</p>
+            <div class="destaque" style="background: #f8d7da; border-left-color: #dc3545;">
+              <strong>⚠️ IMPORTANTE:</strong> Sempre faça backup antes de apagar dados!
+            </div>
+          </section>
+          
+          <section>
+            <h2>6. 📊 Relatórios e Estatísticas</h2>
+            <p>O Dashboard é como um painel de controle que mostra informações importantes sobre seu trabalho. É muito útil para acompanhar o movimento do laboratório.</p>
+            
+            <h3>Como abrir:</h3>
+            <p>Clique no botão "📊 Estatísticas" ou aperte Ctrl+D no teclado.</p>
+            
+            <h3>O que você vê:</h3>
+            <ul>
+              <li><strong>Total de Pacientes:</strong> Quantas pessoas você já cadastrou</li>
+              <li><strong>Cadastros Hoje:</strong> Quantas pessoas você atendeu hoje</li>
+              <li><strong>Por gênero:</strong> Quantos homens, mulheres você atendeu</li>
+              <li><strong>Por laboratório:</strong> Quanto dinheiro foi gasto em cada laboratório</li>
+              <li><strong>Top exames:</strong> Quais exames são mais pedidos</li>
+              <li><strong>Gráfico mensal:</strong> Quantos pacientes por mês</li>
+            </ul>
+          </section>
+          
+          <section>
+            <h2>7. 💾 Como Não Perder Seus Dados (Backup)</h2>
+            <p>Backup é uma cópia de segurança dos seus dados. É muito importante fazer backup para não perder o trabalho.</p>
+            
+            <h3>Backup Automático:</h3>
+            <p>O sistema faz backup sozinho sempre que você cadastra, altera ou apaga um paciente.</p>
+            
+            <h3>Backup Manual (faça toda semana):</h3>
+            <ol>
+              <li>Clique em "📈 Exportar Excel" ou aperte Ctrl+E</li>
+              <li>O arquivo será baixado no seu computador</li>
+              <li>Guarde esse arquivo em local seguro</li>
+            </ol>
+            
+            <div class="destaque" style="background: #f8d7da; border-left-color: #dc3545;">
+              <strong>⚠️ ATENÇÃO:</strong> Importar dados apaga TUDO que está no sistema! Só faça se tiver certeza!
+            </div>
+          </section>
+          
+          <section>
+            <h2>8. ⌨️ Atalhos</h2>
+            <div class="grid">
+              <div>
+                <ul>
+                  <li><strong>Ctrl + S</strong> - Salvar</li>
+                  <li><strong>Ctrl + E</strong> - Exportar</li>
+                  <li><strong>Ctrl + D</strong> - Dashboard</li>
+                  <li><strong>F3</strong> - Buscar</li>
+                  <li><strong>ESC</strong> - Fechar</li>
+                </ul>
+              </div>
+              <div>
+                <ul>
+                  <li><strong>↑ ↓</strong> - Navegar histórico</li>
+                  <li><strong>Enter</strong> - Selecionar</li>
+                  <li><strong>Tab</strong> - Próximo campo</li>
+                </ul>
+              </div>
+            </div>
+          </section>
+          
+          <div style="text-align: center; margin-top: 40px; font-size: 10px; color: #666;">
+            Manual gerado em: ${new Date().toLocaleString('pt-BR')} | Sistema SCEL
+          </div>
+        </body>
+        </html>
+      `;
+      
+      printWindow.document.write(printContent);
+      printWindow.document.close();
+      
+      printWindow.onload = function() {
+        setTimeout(() => {
+          printWindow.print();
+          printWindow.close();
+        }, 500);
+      };
     }
     
     // Fechar modal e histórico clicando fora
